@@ -17,7 +17,7 @@ If you also want to update your MODX version and already placed the install.php 
 
 
 ### Backup by crontab:
-If you want to schedule your backup via a crontab just call the script with the get values like: modx-backup.php?mysql=1&files=1&folder=backup&cron=1
+If you want to schedule your backup via crontab just call the script with the get values like: modx-backup.php?mysql=1&files=1&folder=backup&cron=1
 
 
 ### Environment:
