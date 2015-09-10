@@ -14,7 +14,7 @@ You can just rightclick and download the files after your backup is done. Now yo
 If you also want to update your MODX version and already placed the install.php file from sottwell (https://github.com/sottwell/installer) in the same directory, the script will show a button "remove & update" to remove the backup.php file and redirect you to the update file.
 
 
-## Backup by crontab:
+### Backup by crontab:
 If you want to schedule your backup via a crontab just call the script with the get values like: modx-backup.php?mysql=1&files=1&folder=backup&cron=1
 
 
