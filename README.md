@@ -21,4 +21,4 @@ If you want to schedule your backup via a crontab just call the script with the 
 
 
 ### Environment:
-I hope this script will be helpfull for you. It works on my webhosting environment, but maybe needs some changes on others. Let me know.
+I hope this script will be helpfull for you. It works on my webhosting environment, but may needs some changes on others. Let me know.
