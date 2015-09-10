@@ -1,7 +1,6 @@
 <?php
 	$version = '1.0';
 
-
 	if (!empty($_GET["mysql"]) or !empty($_GET["files"])){
 		if ( !shell_exec("type type")) { $err = "Weak PHP!"; die; }
 		$dir = (!empty($_GET["folder"]) ? $_GET["folder"] : "backup");
