@@ -61,7 +61,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-	    <title>MODX Backuper v<?php echo $version; ?></title>
+	    <title>MODX Backupper v<?php echo $version; ?></title>
 	    <meta charset="utf-8">
 	    <style type="text/css">
 			h2,p{color:#555}.btn,button,label{cursor:pointer}.btn,button,header .logo,header span,section.result span{display:inline-block}article,aside,audio,b,body,canvas,dd,details,div,dl,dt,em,fieldset,figcaption,figure,footer,form,h1,h2,h3,h4,h5,h6,header,hgroup,html,i,img,label,li,mark,menu,nav,ol,p,section,span,strong,summary,table,tbody,td,tfoot,th,thead,time,tr,u,ul,video{margin:0;padding:0;border:0;outline:0;vertical-align:top;background:0 0;font-size:100%}body{background:#f2f2f2;font-size:14px}*{font-family:"Lucida Grande","Lucida Sans Unicode",Verdana,Arial,Helvetica,sans-serif}h2{font-size:20px;margin-bottom:30px}a{margin:0;padding:0;font-size:100%;vertical-align:baseline;background:0 0;text-decoration:none;color:#4e96cc}a:hover{text-decoration:underline}p{margin-bottom:1em;line-height:1.6}.btn,button,header *{color:#fff;font-size:16px}.container{margin:10px 30px}.btn,button{background:#41a796;padding:10px 20px;border-radius:5px;transition:all .4s;border:0;margin-top:20px;margin-right:20px}.btn:hover,button:hover{text-decoration:none;background:#378f80}input[type=text]{padding:5px 10px;width:150px}header{background:#3b515e;padding:10px 30px;margin-bottom:60px}header .logo{background:url(manager/templates/default/images/modx-icon-color.svg) center center no-repeat;text-indent:-999999px;width:30px;height:30px}header span{line-height:30px;padding-left:15px}header .btn.github{float:right;padding:5px 10px;margin:0}section.result span{min-width:140px}
@@ -69,8 +69,8 @@
 	</head>
 	<body>
 	    <header>
-	    	<a class="logo" href="?">MODX Backuper</a><span>MODX Backuper <?php echo $version; ?></span>
-	    	<a class="btn github" href="#" target="_blank">Github</a>
+	    	<a class="logo" href="?">MODX Backupper</a><span>MODX Backupper <?php echo $version; ?></span>
+	    	<a class="btn github" href="https://github.com/jdaehne/backupper" target="_blank">Github</a>
 	    </header>
 	    
 	    <?php
