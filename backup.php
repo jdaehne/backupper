@@ -1,5 +1,5 @@
 <?php
-	$version = '1.0';
+	$version = '1.1';
 
 	if (!empty($_GET["mysql"]) or !empty($_GET["files"])){
 		if ( !shell_exec("type type")) { $err = "Weak PHP!"; die; }
@@ -17,7 +17,7 @@
 		    }
 		    
 		    if (!empty($_GET["files"])){
-		    	system("tar cf {$targetTar} --exclude=$dir ./");
+		    	system("tar cf {$targetTar} --exclude=$dir --exclude=".basename(__FILE__)." ./");
 		    }
 		    
 		    $backup = true;
@@ -42,6 +42,17 @@
 	}
 	
 	
+	
+	
+	if (!empty($_GET["tarfile"])){
+		system("tar xf " . $_GET["tarfile"]);
+		$extract = true;
+	}
+	
+	
+	
+	
+	//Delete Backup-Script
 	if (!empty($_GET["remove"])){
 		unlink(basename(__FILE__));
 		
@@ -52,6 +63,10 @@
 		}
 	}
 	
+	//Delete Tar-File
+	if (!empty($_GET["removetarfile"])){
+		unlink($_GET["tarfile"]);
+	}
 ?>
 
 
@@ -80,36 +95,61 @@
 			}
 	    ?>
 	    
-	    <?php if ($backup != true): ?>
-	    <section class="container">
-	    	<h2>Choose Elements to backup</h2>
-	    	<form method="get">
-	    		<p>
-	    			<input type="checkbox" name="mysql" id="mysql" value="1" checked><label for="mysql"> MySQL Database</label><br />
-	    			<input type="checkbox" name="files" id="files" value="1" checked><label for="files"> Files</label>
-	    		</p>
-	    		<p>
-	    			Folder to place Files: <input type="text" name="folder" value="backup"><br>
-					<button type="submit">Start Backup</button>
-	    		</p>
-	    			
-	    	</form>
-	    </section>
-	    
+	    <?php if ($backup != true and $extract != true): ?>			
+		    <section class="container">
+		    	<?php
+		    		if (empty($_GET["notarlist"]))
+			    	foreach (glob("*.tar") as $filename) {
+						$tarfiles = '<input type="radio" name="tarfile" id="tarfile" value="' . $filename . '" checked> ' . $filename . ' (' . round(filesize($filename) / 1000000, 2) . ' MB)';
+					}
+				?>
+				
+				<?php if (!empty($tarfiles)): ?>
+					<h2>Found Tarfile(s): Extract Archive?</h2>
+					<form method="get">	
+						<p><?php echo $tarfiles; ?></p>
+						<p>
+							<input type="checkbox" name="removetarfile" id="removetarfile" value="1" checked><label for="removetarfile"> Remove Archive</label><br />
+						</p>
+						<button type="submit">Extract</button> <a href="?notarlist=1">No, go to Backup.</a>
+					</form>
+				<?php else: ?>
+			    	<h2>Choose Elements to backup</h2>
+			    	<form method="get">
+			    		<p>
+			    			<input type="checkbox" name="mysql" id="mysql" value="1" checked><label for="mysql"> MySQL Database</label><br />
+			    			<input type="checkbox" name="files" id="files" value="1" checked><label for="files"> Files</label>
+			    		</p>
+			    		<p>
+			    			Folder to place Files: <input type="text" name="folder" value="backup"><br>
+							<button type="submit">Start Backup</button>
+			    		</p>
+			    			
+			    	</form>
+		    	<?php endif; ?>
+		    </section>
 	    <?php else: ?>
-	    
-	    <section class="result container">
-	    	<h2>Backup Finished!</h2>
-	    	<p>
-	    		<span>MySQL Database:</span> <?php echo (!empty($mysql_name) ? '<a href="'.$targetSql.'" target="_blank">'.$mysql_name.'</a> ('.$mysql_size.' MB)' : 'No Backup!'); ?><br />
-	    		<span>Files:</span> <?php echo (!empty($files_name) ? '<a href="'.$targetTar.'" target="_blank">'.$files_name.'</a> ('.$files_size.' MB)' : 'No Backup!'); ?>
-	    	</p>
-	    	<p>
-	    		<a href="?remove=1" class="btn">Remove Backup-Script</a>
-	    		<?php if (file_exists("install.php")): ?><a href="?remove=1&update=1" class="btn">Remove Backup-Script & Update MODX</a><?php endif; ?>
-	    		<?php if (file_exists("install.php")): ?><a href="install.php" class="btn">Update MODX</a><?php endif; ?>
-	    	</p>
-	    </section>
+		    <section class="result container">
+		    	<?php if ($backup == true): ?>		    
+			    	<h2>Backup Finished!</h2>
+			    	<p>
+			    		<span>MySQL Database:</span> <?php echo (!empty($mysql_name) ? '<a href="'.$targetSql.'" target="_blank">'.$mysql_name.'</a> ('.$mysql_size.' MB)' : 'No Backup!'); ?><br />
+			    		<span>Files:</span> <?php echo (!empty($files_name) ? '<a href="'.$targetTar.'" target="_blank">'.$files_name.'</a> ('.$files_size.' MB)' : 'No Backup!'); ?>
+			    	</p>
+			    	<p>
+			    		<a href="?remove=1" class="btn">Remove Backup-Script</a>
+			    		<?php if (file_exists("install.php")): ?><a href="?remove=1&update=1" class="btn">Remove Backup-Script & Update MODX</a><?php endif; ?>
+			    		<?php if (file_exists("install.php")): ?><a href="install.php" class="btn">Update MODX</a><?php endif; ?>
+			    	</p>
+		    	<?php else: ?>
+			    	<h2>Extract Files Finished!</h2>
+			    	<p>
+			    		<a href="?remove=1" class="btn">Remove Backup-Script</a>
+			    		<?php if (file_exists("install.php")): ?><a href="?remove=1&update=1" class="btn">Remove Backup-Script & Update MODX</a><?php endif; ?>
+			    		<?php if (file_exists("install.php")): ?><a href="install.php" class="btn">Update MODX</a><?php endif; ?>
+			    	</p>		    	
+		    	<?php endif; ?>
+		    </section>
 	    <?php endif; ?>
 	    
 	    
