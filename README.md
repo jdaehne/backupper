@@ -19,7 +19,7 @@ If you move your backup (tar-file) to a new server, just place the tar-file and 
 
 
 ### Backup by crontab:
-If you want to schedule your backup via crontab just call the script with the get values like: modx-backup.php?mysql=1&files=1&folder=backup&cron=1
+If you want to schedule your backup via crontab just call the script with the get values like: backup.php?mysql=1&files=1&folder=backup&cron=1
 
 
 ### Environment:
