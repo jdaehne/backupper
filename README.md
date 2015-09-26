@@ -15,7 +15,7 @@ If you also want to update your MODX version and already placed the install.php 
 
 
 ## Extract Archiv:
-If you move your Backup (tar-file) to a new Server, just place the tar-file and the backup.php script into the root and call backup.php in your browser. It will find the tar-files and you can extract the archive.
+If you move your Backup (tar-file) to a new Server, just place the tar-file and the backup.php script into the root and call backup.php in your browser. The script will find the tar-files and you can extract the archive.
 
 
 ### Backup by crontab:
