@@ -1,5 +1,5 @@
 <?php
-	$version = '1.1';
+	$version = '1.2';
 
 	if (!empty($_GET["mysql"]) or !empty($_GET["files"])){
 		if ( !shell_exec("type type")) { $err = "Weak PHP!"; die; }
@@ -10,6 +10,7 @@
 		    $date = date("Ymd-His");
 		    $targetSql = "$dir/{$dbase}_{$date}_mysql.sql";
 		    $targetTar = "$dir/{$dbase}_{$date}_files.tar";
+		    $targetCom = "$dir/{$dbase}_{$date}_combined.tar";
 		    system("mkdir $dir");
 		    
 		    if (!empty($_GET["mysql"])){
@@ -18,6 +19,11 @@
 		    
 		    if (!empty($_GET["files"])){
 		    	system("tar cf {$targetTar} --exclude=$dir --exclude=".basename(__FILE__)." ./");
+		    }
+
+		    //Combine SQL and Files in one archive
+		    if (file_exists($targetSql) and file_exists($targetTar)) {
+		    	system("tar cf {$targetCom} {$targetSql} {$targetTar}");
 		    }
 		    
 		    $backup = true;
@@ -32,6 +38,10 @@
 		if (file_exists($targetTar)) {
 			$files_name = basename($targetTar);
 			$files_size = round(filesize($targetTar) / 1000000, 2);
+		}
+		if (file_exists($targetCom)) {
+			$combi_name = basename($targetCom);
+			$combi_size = round(filesize($targetCom) / 1000000, 2);
 		}
 		
 		
@@ -56,17 +66,24 @@
 	if (!empty($_GET["remove"])){
 		unlink(basename(__FILE__));
 		
-		if (empty($_GET["update"])) {
-			header("Location: /");
-		}else {
-			header("Location: install.php");
+		//Backups löschen
+		if (!empty($_GET["removebackup"]) and !empty($_GET["dir"])) {
+			$dir = $_GET["dir"];
+			foreach(glob("$dir/*") as $file) {
+				unlink($file);
+			}
+			rmdir($dir);
 		}
+		
+		header("Location: /");
 	}
 	
 	//Delete Tar-File
 	if (!empty($_GET["removetarfile"])){
 		unlink($_GET["tarfile"]);
 	}
+
+
 ?>
 
 
@@ -133,20 +150,19 @@
 		    	<?php if ($backup == true): ?>		    
 			    	<h2>Backup Finished!</h2>
 			    	<p>
-			    		<span>MySQL Database:</span> <?php echo (!empty($mysql_name) ? '<a href="'.$targetSql.'" target="_blank">'.$mysql_name.'</a> ('.$mysql_size.' MB)' : 'No Backup!'); ?><br />
-			    		<span>Files:</span> <?php echo (!empty($files_name) ? '<a href="'.$targetTar.'" target="_blank">'.$files_name.'</a> ('.$files_size.' MB)' : 'No Backup!'); ?>
+			    		<span>MySQL Database:</span> <?php echo (!empty($mysql_name) ? '<a href="'.$targetSql.'" target="_blank" download>'.$mysql_name.'</a> ('.$mysql_size.' MB)' : 'No Backup!'); ?><br />
+			    		<span>Files:</span> <?php echo (!empty($files_name) ? '<a href="'.$targetTar.'" target="_blank" download>'.$files_name.'</a> ('.$files_size.' MB)' : 'No Backup!'); ?>
+			    		<?php echo (!empty($combi_name) ? '<br /><span>MySQL & Files:</span> <a href="'.$targetCom.'" target="_blank" download>'.$combi_name.'</a> ('.$combi_size.' MB)' : ''); ?>
 			    	</p>
 			    	<p>
 			    		<a href="?remove=1" class="btn">Remove Backup-Script</a>
-			    		<?php if (file_exists("install.php")): ?><a href="?remove=1&update=1" class="btn">Remove Backup-Script & Update MODX</a><?php endif; ?>
-			    		<?php if (file_exists("install.php")): ?><a href="install.php" class="btn">Update MODX</a><?php endif; ?>
+			    		<a href="?remove=1&removebackup=1&dir=<?php echo $dir; ?>" class="btn">Remove Backup-Script & Backup-Files</a>
 			    	</p>
 		    	<?php else: ?>
 			    	<h2>Extract Files Finished!</h2>
 			    	<p>
 			    		<a href="?remove=1" class="btn">Remove Backup-Script</a>
-			    		<?php if (file_exists("install.php")): ?><a href="?remove=1&update=1" class="btn">Remove Backup-Script & Update MODX</a><?php endif; ?>
-			    		<?php if (file_exists("install.php")): ?><a href="install.php" class="btn">Update MODX</a><?php endif; ?>
+			    		<a href="?remove=1&removebackup=1&dir=<?php echo $dir; ?>" class="btn">Remove Backup-Script & Backup-Files</a>
 			    	</p>		    	
 		    	<?php endif; ?>
 		    </section>
