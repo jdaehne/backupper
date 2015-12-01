@@ -1,33 +1,36 @@
 <?php
-	$version = '1.2';
+	
+	set_time_limit(0);
+
+	$version = '1.3';
 
 	if (!empty($_GET["mysql"]) or !empty($_GET["files"])){
 		if ( !shell_exec("type type")) { $err = "Weak PHP!"; die; }
 		$dir = (!empty($_GET["folder"]) ? $_GET["folder"] : "backup");
 		$configFile = "./core/config/config.inc.php";
 		if (file_exists($configFile)) {
-		    include($configFile);
-		    $date = date("Ymd-His");
-		    $targetSql = "$dir/{$dbase}_{$date}_mysql.sql";
-		    $targetTar = "$dir/{$dbase}_{$date}_files.tar";
-		    $targetCom = "$dir/{$dbase}_{$date}_combined.tar";
-		    system("mkdir $dir");
-		    
-		    if (!empty($_GET["mysql"])){
-		    	system("mysqldump --host=$database_server --user=$database_user --password=$database_password --databases $dbase --no-create-db --default-character-set=utf8 --result-file={$targetSql}");
-		    }
-		    
-		    if (!empty($_GET["files"])){
-		    	system("tar cf {$targetTar} --exclude=$dir --exclude=".basename(__FILE__)." ./");
-		    }
+			include($configFile);
+			$date = date("Ymd-His");
+			$targetSql = "$dir/{$dbase}_{$date}_mysql.sql";
+			$targetTar = "$dir/{$dbase}_{$date}_files.tar";
+			$targetCom = "$dir/{$dbase}_{$date}_combined.tar";
+			system("mkdir $dir");
 
-		    //Combine SQL and Files in one archive
-		    if (file_exists($targetSql) and file_exists($targetTar)) {
-		    	system("tar cf {$targetCom} {$targetSql} {$targetTar}");
-		    }
-		    
-		    $backup = true;
-		    
+			if (!empty($_GET["mysql"])){
+				system("mysqldump --host=$database_server --user=$database_user --password=$database_password --databases $dbase --no-create-db --default-character-set=utf8 --result-file={$targetSql}");
+			}
+
+			if (!empty($_GET["files"])){
+				system("tar cf {$targetTar} --exclude=$dir --exclude=".basename(__FILE__)." ./");
+			}
+
+			//Combine SQL and Files in one archive
+			if (file_exists($targetSql) and file_exists($targetTar)) {
+				system("tar cf {$targetCom} {$targetSql} {$targetTar}");
+			}
+
+			$backup = true;
+
 		}
 		
 		
@@ -46,7 +49,18 @@
 		
 		
 		if (!empty($_GET["cron"])) {
-			echo ($backup == true) ? 'Finished' : 'Error';
+			
+			$infos = json_encode(
+				array(
+					"dir" => $dir,
+					"sql" => $mysql_name,
+					"tar" => $files_name,
+					"com" => $combi_name,
+					)
+				);
+
+
+			echo ($backup == true) ? $infos : 'Error';
 		}
 		
 	}
