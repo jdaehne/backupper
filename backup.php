@@ -2,10 +2,12 @@
 	
 	set_time_limit(0);
 
-	$version = '1.3';
+	//error_reporting(E_ALL);
+	//ini_set('display_errors', 1);
+
+	$version = '1.4';
 
 	if (!empty($_GET["mysql"]) or !empty($_GET["files"])){
-		if ( !shell_exec("type type")) { $err = "Weak PHP!"; die; }
 		$dir = (!empty($_GET["folder"]) ? $_GET["folder"] : "backup");
 		$configFile = "./core/config/config.inc.php";
 		if (file_exists($configFile)) {
@@ -17,7 +19,14 @@
 			system("mkdir $dir");
 
 			if (!empty($_GET["mysql"])){
+				
 				system("mysqldump --host=$database_server --user=$database_user --password=$database_password --databases $dbase --no-create-db --default-character-set=utf8 --result-file={$targetSql}");
+				
+				//If no mysqldump was possible try:
+				if (file_exists($targetSql) or filesize($targetSql) <= 0) {
+					system(sprintf('mysqldump --no-tablespaces --opt -h%s -u%s -p"%s" %s --result-file=%s', $database_server, $database_user, $database_password, $dbase, $targetSql));
+				}
+
 			}
 
 			if (!empty($_GET["files"])){
@@ -25,7 +34,7 @@
 			}
 
 			//Combine SQL and Files in one archive
-			if (file_exists($targetSql) and file_exists($targetTar)) {
+			if (file_exists($targetSql) and file_exists($targetTar) and filesize($targetSql) > 0) {
 				system("tar cf {$targetCom} {$targetSql} {$targetTar}");
 			}
 
@@ -33,8 +42,9 @@
 
 		}
 		
+		echo $mysql;
 		
-		if (file_exists($targetSql)) {
+		if (file_exists($targetSql) and filesize($targetSql) > 0) {
 			$mysql_name = basename($targetSql);
 			$mysql_size = round(filesize($targetSql) / 1000000, 2);
 		}
