@@ -1,11 +1,14 @@
 <?php
 	
+	$version = '1.4.1';
+
 	set_time_limit(0);
+	ini_set('max_execution_time', 0);
 
-	//error_reporting(E_ALL);
-	//ini_set('display_errors', 1);
+	error_reporting(E_ALL);
+	ini_set('display_errors', 1);
 
-	$version = '1.4';
+	header('Content-Type: text/html; charset=utf-8');
 
 	if (!empty($_GET["mysql"]) or !empty($_GET["files"])){
 		$dir = (!empty($_GET["folder"]) ? $_GET["folder"] : "backup");
