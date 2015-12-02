@@ -1,14 +1,19 @@
 <?php
 	
-	$version = '1.4.1';
+	$version = '1.4.2';
 
 	set_time_limit(0);
 	ini_set('max_execution_time', 0);
 
-	error_reporting(E_ALL);
-	ini_set('display_errors', 1);
+	//error_reporting(E_ALL);
+	//ini_set('display_errors', 1);
+	error_reporting(0);
+	ini_set('display_errors', 0);
 
-	header('Content-Type: text/html; charset=utf-8');
+
+	$backup = $extract = $mysql = false;
+	date_default_timezone_set('Europe/Berlin');
+
 
 	if (!empty($_GET["mysql"]) or !empty($_GET["files"])){
 		$dir = (!empty($_GET["folder"]) ? $_GET["folder"] : "backup");
@@ -130,14 +135,6 @@
 	    	<a class="logo" href="?">MODX Backupper</a><span>MODX Backupper <?php echo $version; ?></span>
 	    	<a class="btn github" href="https://github.com/jdaehne/backupper" target="_blank">Github</a>
 	    </header>
-	    
-	    <?php
-			if (is_array($err)) {
-				foreach ($err as $msg){
-					echo '<p>'.$msg.'</p>';
-				}
-			}
-	    ?>
 	    
 	    <?php if ($backup != true and $extract != true): ?>			
 		    <section class="container">
