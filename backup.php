@@ -1,6 +1,6 @@
 <?php
 	
-	$version = '1.4.2';
+	$version = '1.4.3';
 
 	set_time_limit(0);
 	ini_set('max_execution_time', 0);
@@ -49,8 +49,7 @@
 			$backup = true;
 
 		}
-		
-		echo $mysql;
+
 		
 		if (file_exists($targetSql) and filesize($targetSql) > 0) {
 			$mysql_name = basename($targetSql);
